@@ -1,0 +1,36 @@
+- name: Download docker installer
+  become: yes
+  get_url:
+    url: https://get.docker.com
+    dest: "{{ ansible_env.HOME }}/get-docker.sh"
+    mode: 0755
+
+- name: Install docker
+  become: yes
+  command: "{{ ansible_env.HOME }}/get-docker.sh"
+
+- name: Make cli-plugins directory
+  file:
+    path: "{{ ansible_env.HOME }}/.docker/cli-plugins"
+    state: directory
+    mode: 0755
+
+- name: Download docker-compose
+  become: yes
+  get_url:
+    url: https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-armv7
+    dest: "{{ ansible_env.HOME }}/.docker/cli-plugins/docker-compose"
+    mode: 0755
+
+- name: Create docker group
+  become: yes
+  group:
+    name: docker
+    state: present
+
+- name: Add user to docker group
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    group: docker
+    append: yes
