@@ -1,0 +1,8 @@
+---
+- hosts: all
+  remote_user: pi
+  tasks:
+    - include_tasks: tasks/docker.yml
+    - name: Reboot
+      become: yes
+      reboot:
